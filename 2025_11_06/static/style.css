@@ -1,0 +1,54 @@
+body {
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #3366cc;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input, textarea {
+    display: block;
+    width: 95%;
+    margin: 10px;
+    padding: 10px;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+img {
+    width: 200px;
+    margin: 10px;
+}
+
+footer {
+    background-color: #3366cc;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+}
