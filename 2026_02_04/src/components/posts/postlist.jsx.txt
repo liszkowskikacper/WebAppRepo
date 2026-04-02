@@ -1,0 +1,54 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const PostsOverview = () => {
+    const [list, setList] = useState([]);
+    const [isFetching, setIsFetching] = useState(true);
+
+    const getPosts = async () => {
+        try {
+            const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+            const result = await res.json();
+
+            const shortened = result.map(item => ({
+                ...item,
+                preview: item.body.slice(0, 80)
+            }));
+
+            setList(shortened);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsFetching(false);
+        }
+    };
+
+    useEffect(() => {
+        getPosts();
+    }, []);
+
+    if (isFetching) {
+        return <p>Pobieranie danych...</p>;
+    }
+
+    return (
+        <main>
+            <h1>Posty</h1>
+
+            {list.length === 0 ? (
+                <p>Brak danych</p>
+            ) : (
+                list.map(({ id, title, preview }) => (
+                    <article key={id}>
+                        <h3>
+                            <Link to={`/post/${id}`}>{title}</Link>
+                        </h3>
+                        <p>{preview}...</p>
+                    </article>
+                ))
+            )}
+        </main>
+    );
+};
+
+export default PostsOverview;

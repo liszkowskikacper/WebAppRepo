@@ -1,0 +1,75 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
+const PostView = () => {
+    const { id } = useParams();
+
+    const [data, setData] = useState({
+        post: null,
+        author: null,
+        comments: []
+    });
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    const loadData = async () => {
+        try {
+            const postRes = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+            const postJson = await postRes.json();
+
+            const userRes = await fetch(`https://jsonplaceholder.typicode.com/users/${postJson.userId}`);
+            const userJson = await userRes.json();
+
+            const commentsRes = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`);
+            const commentsJson = await commentsRes.json();
+
+            setData({
+                post: postJson,
+                author: userJson,
+                comments: commentsJson
+            });
+        } catch (err) {
+            console.error("Błąd podczas pobierania:", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadData();
+    }, [id]);
+
+    if (isLoading) {
+        return <p>Proszę czekać...</p>;
+    }
+
+    return (
+        <section>
+            <h1>{data.post?.title}</h1>
+
+            {data.author && (
+                <div>
+                    <h4>Napisał: {data.author.name}</h4>
+                    <small>{data.author.email}</small>
+                </div>
+            )}
+
+            <article>{data.post?.body}</article>
+
+            <h2>Lista komentarzy</h2>
+
+            {data.comments.length > 0 ? (
+                data.comments.map(({ id, name, email, body }) => (
+                    <div key={id}>
+                        <p><strong>{name}</strong> - {email}</p>
+                        <p>{body}</p>
+                    </div>
+                ))
+            ) : (
+                <p>Brak komentarzy</p>
+            )}
+        </section>
+    );
+};
+
+export default PostView;
